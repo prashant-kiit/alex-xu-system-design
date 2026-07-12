@@ -1,3 +1,5 @@
+# https://github.com/ArjanCodes/examples/blob/main/2024/func/6_composition.py
+
 from functools import partial, reduce
 from typing import Callable
 
