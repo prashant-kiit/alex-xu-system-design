@@ -1,23 +1,20 @@
-// Problem:
-// Since DB Context is different from the Service Context, db_operations_n are Side Effects
-// Thus Service layer is no control over DB Context, However have to wait for the DB Call to Complete
-// This causes the Stack to Block the CPU with this DB Call
-// This prevents other Processes from running on CPU
-// This compromises Performance and Memory
-// Solution:
-// Program Pushed DB Calls to Event Queue in OS and get Promise in return
-// OS Event Loop will run the Event Queued DB Calls using Epoll (Polling technique)
-// This can be done by async keyword or Promise
-// Problem:
-// Transform Calls depend of the response from DB Calls to perform action
-// Solution:
-// So Transform Calls must await for the DB Calls ie. Promise from DB calls must be resolved by Tranform Calls
-// This can be done by await keyword or .then(callback)
-// Problem:
-// Event Loop do not guareentee the order of execution without proper Promise Resolution
-// Solution:
-// To maintain order of execution (Sync-ness) make blocking calls using await (here, Main thread is blocked by CPU which has yet not processed the previous function)
+# Async / Non-Blocking Notes
 
+**Problem:** Since DB Context is different from the Service Context, `db_operation_n` calls are Side Effects. Thus the Service layer has no control over DB Context, but has to wait for the DB Call to complete. This causes the stack to block the CPU with this DB call, preventing other processes from running on the CPU — compromising performance and memory.
+
+**Solution:** The program pushes DB calls to the Event Queue in the OS and gets a Promise in return. The OS Event Loop runs the queued DB calls using epoll (polling technique). This can be done via the `async` keyword or `Promise`.
+
+**Problem:** Transform calls depend on the response from DB calls to perform their action.
+
+**Solution:** Transform calls must `await` the DB calls, i.e. the Promise from DB calls must be resolved by Transform calls. This can be done via the `await` keyword or `.then(callback)`.
+
+**Problem:** The Event Loop does not guarantee order of execution without proper Promise resolution.
+
+**Solution:** To maintain order of execution (sync-ness), make blocking calls using `await` (here, the main thread is blocked by the CPU, which has not yet processed the previous function).
+
+## Example
+
+```js
 @pure
 @logger(after=True, "transform_0 is done")
 async function transform_0(response) {
@@ -44,7 +41,7 @@ async function db_operation_0(response) {
 
 @sideeffect
 @logger(after=True, "db_operation_1 is done")
-fasync unction db_operation_1(response) {
+async function db_operation_1(response) {
     return query_1()
 }
 
@@ -80,6 +77,4 @@ async function handler(request) {
 
 @route
 map.set("/handler", handler)
-    
-
-    
+```
