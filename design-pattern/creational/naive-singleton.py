@@ -1,6 +1,6 @@
 """
 Definition: Singleton Pattern: One Object of an Class in one Runtime
-Use cases: Configuration managers, Database connection pools, Logging services etc.
+Use cases: Configuration managers, Database connection pools, Logging services etc., Best for stateless beans
 Types:
 Thread Unsafe Singleton
 Thread Safe Singleton
