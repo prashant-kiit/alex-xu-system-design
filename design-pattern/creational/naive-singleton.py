@@ -12,14 +12,14 @@ class SingletonMeta(type):
             cls.__instance[cls] = super().__call__(*args, **kwargs)
         return cls.__instance[cls]
 
-class Singletone():
+class Singletone(metaclass=SingletonMeta):
     def some_business_logic(self):
         pass
 
 if __name__ == "__main__":
     s1 = Singletone()
-    s1 = Singletone()
-    print(s1 is s1)
+    s2 = Singletone()
+    print(s1 is s2)
 
 
 """
