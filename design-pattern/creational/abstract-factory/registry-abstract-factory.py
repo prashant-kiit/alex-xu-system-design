@@ -43,6 +43,24 @@ class OS(ABC):
     def create_process():
         pass
 
+class OSFactory():
+    __instance = {}
+
+    @classmethod
+    def register(cls, os_type):
+        def wrapper(os_cls):
+            cls.__instance[os_type] = os_cls
+        return wrapper
+
+    @classmethod
+    def get_os(cls, os_type):
+        os_cls = cls.__instance.get(os_type)
+        if os_cls is not None:
+            return os_cls()
+        else:
+            raise Exception("Invalid os type")
+
+@OSFactory.register("windows")
 class WindowsOS(OS):
     def create_memory(self):
         return WindowsMemory()
@@ -50,6 +68,7 @@ class WindowsOS(OS):
     def create_process(self):
         return WindowsProcess()
 
+@OSFactory.register("mac")
 class MacOS(OS):
     def create_memory(self):
         return MacMemory()
@@ -57,23 +76,11 @@ class MacOS(OS):
     def create_process(self):
         return MacProcess()
 
-class OSFactory():
-    @classmethod
-    def get_os(cls, os_type):
-        if os_type == "windows":
-            return WindowsOS()
-        elif os_type == "mac":
-            return MacOS()
-        else:
-            raise Exception("Invalid os type")
-
 class Machine():
     def __init__(self, os):
         self.os = os
-    def create(self):
         self.memory = self.os.create_memory()
         self.process = self.os.create_process()
-        return self
     def run(self):
         self.memory.store()
         self.process.execute()
@@ -81,4 +88,4 @@ class Machine():
 
 if __name__ == "__main__":
     machine = Machine(OSFactory.get_os("mac"))
-    machine.create().run()
+    machine.run()
