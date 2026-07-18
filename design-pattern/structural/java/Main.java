@@ -1,3 +1,4 @@
+package java;
 interface IEngine {
     public void start();
 }
