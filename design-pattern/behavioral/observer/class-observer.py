@@ -1,3 +1,9 @@
+"""
+Definition: A behavioral design pattern where an object (the "subject") maintains a list of dependents (the "observers") and automatically notifies them of any state changes, usually by calling a method on each.
+
+Use case: When multiple objects need to react to changes in another object without tight coupling — e.g., event systems, GUI widgets reacting to data changes, pub/sub messaging, stock price tickers, logging/monitoring hooks.
+"""
+
 from abc import ABC, abstractmethod
 from typing import List
 

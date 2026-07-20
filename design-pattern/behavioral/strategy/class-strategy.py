@@ -1,3 +1,8 @@
+"""
+Definition: A behavioral design pattern that defines a family of interchangeable algorithms, encapsulates each one, and lets you swap them at runtime without changing the code that uses them.
+Use case: When you have multiple ways to perform a task (e.g., different sorting algorithms, payment methods, discount rules, compression algorithms) and want to select the behavior dynamically instead of using long if/elif chains.
+"""
+
 from abc import ABC, abstractmethod
 
 
